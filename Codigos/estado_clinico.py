@@ -1,4 +1,4 @@
-# Run this app with `python app.py` and
+
 # visit http://127.0.0.1:8050/ in your web browser.
 #Gráfico da quantidade de pessoas envolvidas nos acidentes em determinada situação clínica por estado (podendo variar o ano e a condição (ferido, morto, ileso...));
 import dash
@@ -28,8 +28,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 
-# Prepara o html
-
+# Preparando o html com um dropdown dos tipos de estados clínicos e um slider para a variação dos anos
 app.layout = html.Div([
     html.Div([
             html.Label('Estado_Clínico'),
@@ -62,15 +61,17 @@ app.layout = html.Div([
     )
 ])
 
-#Faz com que atualize automaticamente 
+#Faz com que atualize automaticamente após as mudanças
 @app.callback(
     Output('indicator-graphic', 'figure'),
     [Input('xaxis-column', 'value'),
      Input('year--slider', 'value')])
 def update_graph(xaxis_column,year_value):
     dff = df[df['data_inversa'] == year_value]
+    #Agrupando a quantidade de pessoas por cada estado
     dados_por_ocorrencia2 = dff.groupby(['uf']).sum()
 
+    #Gráfico de colunas
     fig = px.bar(dados_por_ocorrencia2,x=dados_por_ocorrencia2.index,y=xaxis_column)
 
     fig.update_layout(transition_duration=500)
