@@ -10,17 +10,7 @@ import plotly.express as px
 import pandas as pd
 
 # Carrega a base de dados
-df = pd.read_csv('dados_por_ocorrencia.csv', encoding='ISO-8859-1')
-
-#Função para tirar dia e mês e deixar só o ano respectivo do dataframe
-def replaceYear(df):
-  if type(df) is str:
-    date = df[:4]
-    return int(date)
-  else:
-    return df
-
-df['data_inversa'] = df['data_inversa'].apply(replaceYear)
+df = pd.read_csv('pessoas_uf_ano.csv', encoding='ISO-8859-1')
 
 # Carrega o css do html
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -80,12 +70,10 @@ app.layout = html.Div([
     [Input('xaxis-column', 'value'),
      Input('year--slider', 'value')])
 def update_graph(xaxis_column,year_value):
-    dff = df[df['data_inversa'] == year_value]
-    #Agrupando a quantidade de pessoas por cada estado
-    dados_por_ocorrencia2 = dff.groupby(['uf']).sum()
+    dff = df[df['ano' == year_value]
 
     #Gráfico de colunas
-    fig = px.bar(dados_por_ocorrencia2,x=dados_por_ocorrencia2.index,y=xaxis_column)
+    fig = px.bar(dff,x=dff.uf, y=xaxis_column)
 
     fig.update_layout(transition_duration=500)
     return fig
