@@ -30,6 +30,19 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # Preparando o html com um dropdown dos tipos de estados clínicos e um slider para a variação dos anos
 app.layout = html.Div([
+    html.H1(
+        children='Estado Clínico',
+        style={
+            'textAlign': 'center',
+            'color': 'black'
+        }
+    ),
+
+    html.Div(children='Estado Clínico das Vítimas por UF', style={
+        'textAlign': 'center',
+        'color': 'black'
+    }),
+
     html.Div([
             html.Label('Estado_Clínico'),
                 dcc.Dropdown(
