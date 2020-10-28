@@ -56,10 +56,10 @@ app.layout = html.Div([
 
     dcc.Slider(
         id='year--slider',
-        min=df['data_inversa'].min(),
-        max=df['data_inversa'].max(),
-        value=df['data_inversa'].max(),
-        marks={str(year): str(year) for year in df['data_inversa'].unique()},
+        min=df['ano'].min(),
+        max=df['ano'].max(),
+        value=df['ano'].max(),
+        marks={str(year): str(year) for year in df['ano'].unique()},
         step=None
     )
 ])
@@ -70,10 +70,11 @@ app.layout = html.Div([
     [Input('xaxis-column', 'value'),
      Input('year--slider', 'value')])
 def update_graph(xaxis_column,year_value):
-    dff = df[df['ano' == year_value]
-
+    dff = df[df['ano' == year_value]]
+    dff = dff.set_index('uf')
+    print(dff.info())
     #Gráfico de colunas
-    fig = px.bar(dff,x=dff.uf, y=xaxis_column)
+    fig = px.bar(dff ,x=dff.index, y=xaxis_column)
 
     fig.update_layout(transition_duration=500)
     return fig
