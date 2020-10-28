@@ -28,7 +28,7 @@ app.layout = html.Div([
         }
     ),
 
-    html.Div(children='Estado Clínico das Vítimas por UF', style={
+    html.Div(children='Quantidade de Vítimas por Estado Clínico em cada Federação', style={
         'textAlign': 'center',
         'color': 'black'
     }),
@@ -70,8 +70,9 @@ app.layout = html.Div([
     [Input('xaxis-column', 'value'),
      Input('year--slider', 'value')])
 def update_graph(xaxis_column,year_value):
-    dff = df[df['ano' == year_value]]
+    dff = df[df['ano'] == year_value]
     dff = dff.set_index('uf')
+    dff = dff.sort_values(by=xaxis_column, ascending=False)
     print(dff.info())
     #Gráfico de colunas
     fig = px.bar(dff ,x=dff.index, y=xaxis_column)
