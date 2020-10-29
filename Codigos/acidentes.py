@@ -10,29 +10,26 @@ import plotly.express as px
 import pandas as pd
 
 # Carrega a base de dados
-df = pd.read_csv('dados_por_ocorrencia.csv', encoding='ISO-8859-1')
+dfano = pd.read_csv('pessoas_mes_ano.csv', encoding='ISO-8859-1')
 
-#Criando as colunas de ano e mês
-df['ano'] = df['data_inversa'].apply(lambda x: int(str(x)[:4]))
-df['mes'] = df['data_inversa'].apply(lambda x: str(x)[5:7])
-'''
+
 months = {
-          "1": "Jan",
-          "2": "Fev",
-          "3": "Mar",
-          "4": "Abril",
-          "5": "Maio",
-          "6": "Jun",
-          "7": "Jul",
-          "8": "Ago",
-          "9": "Set",
-          "10": "Out",
-          "11": "Nov",
-          "12": "Dez",                        
+          1: "Jan",
+          2: "Fev",
+          3: "Mar",
+          4: "Abril",
+          5: "Maio",
+          6: "Jun",
+          7: "Jul",
+          8: "Ago",
+          9: "Set",
+          10: "Out",
+          11: "Nov",
+          12: "Dez",                        
             
                   }
 
-df['mes'] = df['mes'].replace(months)'''
+dfano['mes'] = dfano['mes'].replace(months)
 
 
 
@@ -47,7 +44,7 @@ app.layout = html.Div([
     html.Div([
             html.Label('Estado_Clínico'),
                 dcc.Dropdown(
-                    id='xaxis-column',
+                    id='xaxiss-column',
                     options=[{'label': 'Mortos', 'value': 'mortos'},
                     {
                         'label': 'Feridos Graves', 'value': 'feridos_graves'
@@ -63,30 +60,28 @@ app.layout = html.Div([
         ],
         style={'width': '48%', 'display': 'inline-block'}),
 
-    dcc.Graph(id='indicator-graphic'),
+    dcc.Graph(id='indicador-graphic'),
 
     dcc.Slider(
-        id='year--slider',
-        min=df['ano'].min(),
-        max=df['ano'].max(),
-        value=df['ano'].max(),
-        marks={str(year): str(year) for year in df['ano'].unique()},
+        id='ano--slider',
+        min=dfano['ano'].min(),
+        max=dfano['ano'].max(),
+        value=dfano['ano'].max(),
+        marks={str(year): str(year) for year in dfano['ano'].unique()},
         step=None
     )
 ])
 
 #Faz com que atualize automaticamente após as mudanças
 @app.callback(
-    Output('indicator-graphic', 'figure'),
-    [Input('xaxis-column', 'value'),
-     Input('year--slider', 'value')])
+    Output('indicador-graphic', 'figure'),
+    [Input('xaxiss-column', 'value'),
+     Input('ano--slider', 'value')])
 def update_graph(xaxis_column,year_value):
-    dff = df[df['ano'] == year_value]
-    #Agrupando a quantidade de pessoas por cada mês
-    dados_por_ocorrencia2 = dff.groupby(['mes']).sum()
-
+    dff = dfano[dfano['ano'] == year_value]
+  
     #Gráfico de colunas
-    fig = px.bar(dados_por_ocorrencia2,x=dados_por_ocorrencia2.index,y=xaxis_column)
+    fig = px.bar(dff,x=dff['mes'],y=xaxis_column)
 
     fig.update_layout(transition_duration=500)
     return fig
